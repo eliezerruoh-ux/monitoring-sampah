@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sistem Monitoring Sampah Kota Kotamobagu</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<div class="loader" id="loader">
+  <div class="loader-box">
+    <div class="loader-circle"></div>
+    <h2>Monitoring Sampah Kota Kotamobagu</h2>
+  </div>
+</div>
+
+<header class="navbar">
+  <div class="logo">
+    ♻ Sistem Monitoring Sampah Kota Kotamobagu
+  </div>
+
+  <nav>
+    <a href="#hero">Beranda</a>
+    <a href="#lapor">Lapor Sampah</a>
+    <a href="#jadwal">Jadwal</a>
+    <a href="#mapSection">Peta</a>
+    <a href="#statistik">Statistik</a>
+    <a href="#tentang">Tentang</a>
+    <a href="#kontak">Kontak</a>
+  </nav>
+
+  <div class="status-box" id="statusBox">
+    🟢 Layanan Buka
+  </div>
+</header>
+
+<section class="hero" id="hero">
+  <div class="hero-text">
+    <h1>Pantau Sampah,<br>Jaga Kebersihan Lingkungan</h1>
+    <p>
+      Sistem monitoring kebersihan modern untuk masyarakat
+      yang lebih peduli lingkungan.
+    </p>
+
+    <div class="hero-btn">
+      <a href="#lapor" class="btn">Lapor Sampah</a>
+      <a href="#jadwal" class="btn btn2">Lihat Jadwal</a>
+    </div>
+  </div>
+
+  <div class="hero-image">
+    🗑
+  </div>
+</section>
+
+<section class="glass section" id="lapor">
+  <h2>Form Laporan Sampah</h2>
+
+  <form id="reportForm">
+    <input type="hidden" id="editIndex">
+
+    <div class="grid-2">
+      <input type="text" id="nama" placeholder="Nama Pelapor" required>
+      <input type="text" id="hp" placeholder="Nomor HP" required>
+    </div>
+
+    <div class="grid-2">
+      <select id="kecamatan" required>
+        <option value="">Pilih Kecamatan</option>
+        <option>Kotamobagu Utara</option>
+        <option>Kotamobagu Selatan</option>
+        <option>Kotamobagu Timur</option>
+        <option>Kotamobagu Barat</option>
+      </select>
+
+      <select id="kelurahan" required>
+        <option value="">Pilih Kelurahan</option>
+      </select>
+    </div>
+
+    <input type="text" id="alamat" placeholder="Detail Alamat" required>
+
+    <div class="grid-2">
+      <input type="text" id="lokasi" placeholder="Lokasi GPS otomatis">
+      <button type="button" class="gps-btn" onclick="getLocation()">
+        📍 Ambil Lokasi Saya
+      </button>
+    </div>
+
+    <div class="grid-2">
+      <select id="jenis">
+        <option>Organik</option>
+        <option>Anorganik</option>
+        <option>Plastik</option>
+        <option>Limbah Rumah Tangga</option>
+      </select>
+
+      <select id="status">
+        <option>Belum Diangkut</option>
+        <option>Dalam Perjalanan</option>
+        <option>Sedang Diangkut</option>
+        <option>Selesai Diangkut</option>
+      </select>
+    </div>
+
+    <textarea id="deskripsi" placeholder="Deskripsi laporan"></textarea>
+
+    <div class="grid-3">
+      <div>
+        <label>Foto Sampah</label>
+        <input type="file" id="foto">
+        <img id="preview1" class="preview">
+      </div>
+
+      <div>
+        <label>Foto Sebelum</label>
+        <input type="file" id="before">
+        <img id="preview2" class="preview">
+      </div>
+
+      <div>
+        <label>Foto Sesudah</label>
+        <input type="file" id="after">
+        <img id="preview3" class="preview">
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <input type="text" id="petugas" placeholder="Nama Petugas">
+      <input type="text" id="kendaraan" placeholder="Kendaraan Pengangkut">
+    </div>
+
+    <button type="submit" class="submit-btn">
+      Simpan Laporan
+    </button>
+  </form>
+</section>
+
+<section class="section statistik" id="statistik">
+  <div class="stat-card">
+    <h3>Total Laporan</h3>
+    <h1 id="totalLaporan">0</h1>
+  </div>
+
+  <div class="stat-card">
+    <h3>Belum Diangkut</h3>
+    <h1 id="belum">0</h1>
+  </div>
+
+  <div class="stat-card">
+    <h3>Diproses</h3>
+    <h1 id="diproses">0</h1>
+  </div>
+
+  <div class="stat-card">
+    <h3>Selesai</h3>
+    <h1 id="selesai">0</h1>
+  </div>
+</section>
+
+<section class="glass section" id="mapSection">
+  <h2>Peta Monitoring Sampah</h2>
+  <div id="map"></div>
+</section>
+
+<section class="glass section" id="jadwal">
+  <h2>Jadwal Pengangkutan Sampah</h2>
+
+  <div class="schedule">
+    <div class="schedule-card">
+      <h3>Senin - Jumat</h3>
+      <p>08:00 - 17:00</p>
+      <span>🟢 Operasional</span>
+    </div>
+  </div>
+</section>
+
+<section class="glass section">
+  <h2>Search & Filter</h2>
+
+  <div class="grid-3">
+    <input type="text" id="searchInput" placeholder="Cari laporan...">
+
+    <select id="filterStatus">
+      <option value="">Semua Status</option>
+      <option>Belum Diangkut</option>
+      <option>Dalam Perjalanan</option>
+      <option>Sedang Diangkut</option>
+      <option>Selesai Diangkut</option>
+    </select>
+
+    <select id="filterWilayah">
+      <option value="">Semua Kecamatan</option>
+      <option>Kotamobagu Utara</option>
+      <option>Kotamobagu Selatan</option>
+      <option>Kotamobagu Timur</option>
+      <option>Kotamobagu Barat</option>
+    </select>
+  </div>
+</section>
+
+<section class="section laporan-section">
+  <h2>Daftar Laporan</h2>
+  <div class="report-container" id="reportContainer"></div>
+</section>
+
+<section class="glass section" id="tentang">
+  <h2>Tentang Sistem</h2>
+  <p>
+    Sistem Monitoring Sampah dan Kebersihan Kota Kotamobagu
+    merupakan platform digital modern berbasis frontend untuk
+    membantu masyarakat melaporkan sampah dan memantau
+    kebersihan lingkungan secara real-time.
+  </p>
+</section>
+
+<section class="glass section" id="kontak">
+  <h2>Kontak</h2>
+  <p>Email: monitoringkotamobagu@gmail.com</p>
+  <p>Telepon: 0813-4771-9948</p>
+</section>
+
+<footer>
+  Monitoring Lingkungan Digital Kota Kotamobagu © 2026
+</footer>
+
+<div class="popup" id="popup">
+  <div class="popup-box">
+    <h2>🔴 Layanan Monitoring Sampah Sedang Tutup</h2>
+    <p>Jam operasional: Senin - Jumat (08:00 - 17:00)</p>
+    <button onclick="closePopup()">Lihat Jadwal</button>
+  </div>
+</div>
+
+<button class="fab" onclick="scrollToTop()">
+  ↑
+</button>
+
+<div class="clock" id="clock"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
